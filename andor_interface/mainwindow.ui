@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>882</width>
+    <height>326</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QPlainTextEdit" name="output">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>10</y>
+      <width>471</width>
+      <height>211</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="input">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>240</y>
+      <width>471</width>
+      <height>25</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rbtnPython">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>20</y>
+      <width>112</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Python</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rbtnBash">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>50</y>
+      <width>112</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bash</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="rbtnNone">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>80</y>
+      <width>112</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>None</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>180</y>
+      <width>191</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="btnStart">
+         <property name="text">
+          <string>start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnStop">
+         <property name="text">
+          <string>stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="btnConnect">
+         <property name="text">
+          <string>connect</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnScript">
+         <property name="text">
+          <string>script</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>211</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QComboBox" name="cboxFilter">
+       <item>
+        <property name="text">
+         <string>Home</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>position 1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>position 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>position 3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>position 4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>position 5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>10</y>
+      <width>101</width>
+      <height>49</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Filter Wheel</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>882</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menudocumentation">
+    <property name="title">
+     <string>documentation</string>
+    </property>
+    <addaction name="actionTutorial"/>
+   </widget>
+   <addaction name="menudocumentation"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionTutorial">
+   <property name="text">
+    <string>Tutorial</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

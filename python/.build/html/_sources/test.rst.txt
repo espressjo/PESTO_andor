@@ -1,0 +1,22 @@
+How to use python_andor.py
+=================================
+
+Getting Started
+---------------
+
+First open a terminal (ctrl+alt+t in Ubuntu). Then enter
+.. highlight:: python
+
+::
+
+	from python_andor import command as com
+
+	com = com() 
+
+.. highlight:: none
+
+.. figure:: audela.png
+
+	This is a caption
+
+ 

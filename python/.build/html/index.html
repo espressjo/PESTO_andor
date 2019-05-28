@@ -1,0 +1,288 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to python_andor’s documentation! &#8212; python_andor 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to use python_andor.py" href="start.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-python-andor-s-documentation">
+<h1>Welcome to python_andor’s documentation!<a class="headerlink" href="#welcome-to-python-andor-s-documentation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="python_andor.command">
+<em class="property">class </em><code class="descclassname">python_andor.</code><code class="descname">command</code><a class="headerlink" href="#python_andor.command" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="python_andor.command.acq">
+<code class="descname">acq</code><span class="sig-paren">(</span><em>nbExp</em>, <em>expTime</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.acq" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function triggeres an acquisition sequence</dd>
+<dt><strong>nbExp</strong>: </dt>
+<dd>number of exposure</dd>
+<dt><strong>expTime</strong>: </dt>
+<dd>exposure time in seconds</dd>
+<dt><strong>Options</strong>:</dt>
+<dd>–nowoof–: [True/False] Do not start the watch dog (does not block the main thread)</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>return void once the nb. of exposure is acquired</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.acq_mode">
+<code class="descname">acq_mode</code><span class="sig-paren">(</span><em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.acq_mode" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function sets the acquisition mode. Choices are : Target, video,flat,dark</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>return -1 if fails, void if successfull</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.fw">
+<code class="descname">fw</code><span class="sig-paren">(</span><em>filtre</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.fw" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function set the filter.</dd>
+<dt><strong>Note</strong>:</dt>
+<dd>If this function fails it will return -1 and write NA in the header</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>Initialization sequences. This function will open a tclsh (version 8.5) console, then upload source client.tcl. Afterward a series of command will be sent to the window computer. Mostly, tcl source files will be uploaded.</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>void</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.script">
+<code class="descname">script</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.script" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function will execute a script. The user will be prompt the enter the target name, exposure time and object name. The header, acquisition mode and the path will be automatically updated.</dd>
+<dt><strong>Options</strong>:</dt>
+<dd>–video–: Not used interactivally. Will trigger the video function. Use the video function
+–no_header: Used to not querry telinfo and telmeteo. If the script function fails the first time because of the telmeteo or telinfo, you can manually use the set_header function and then use script(no_header=True).</dd>
+<dt><strong>Note</strong>:</dt>
+<dd><ol class="first last lowerroman simple">
+<li>Use the stop_acq() function to stop the acquisition of th script.</li>
+<li>the video flux will be automatically launched after exposuretime+2 secondes</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.send" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function directly sends command to the window tclsh console. Do not use this function while another function is running</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.set_header">
+<code class="descname">set_header</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.set_header" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Desceription</strong>:</dt>
+<dd>This function will set the header of the futur images. BonOMM must be open otherwise the function will fail.</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>This function returns 0 if successfull or -1 if unsuccessfull</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.set_path">
+<code class="descname">set_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.set_path" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function will set the window working path. E.g., /190521/Target/test-omm/.</dd>
+<dt><strong>Note</strong>:</dt>
+<dd>This function is useless if the class is used interactively</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>This function will return 0 if succesffull or -1 if it failed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.stop_acq">
+<code class="descname">stop_acq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.stop_acq" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function will stop a image acquisition</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.video">
+<code class="descname">video</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.video" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function will start the video flux. The user will be ask to enter the exposure time</dd>
+<dt><strong>Note</strong>:</dt>
+<dd><ol class="first last lowerroman simple">
+<li>use the stop_acq() function to stop the video feed</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.video_flux">
+<code class="descname">video_flux</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.video_flux" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function starts the video flux</dd>
+<dt><strong>Note</strong>:</dt>
+<dd>Normally this function is not used interactivelly</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="python_andor.command.watch_dog">
+<code class="descname">watch_dog</code><span class="sig-paren">(</span><em>expT</em><span class="sig-paren">)</span><a class="headerlink" href="#python_andor.command.watch_dog" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><strong>Description</strong>:</dt>
+<dd>This function starts the watch dog. Essentially, it launch an infinite loop that follows every image creation in the working path directory.</dd>
+<dt><strong>Note</strong>:</dt>
+<dd>This function can be used interactivaly, but will block the main thread. Either use this function with the acq function or open another console the execute the stop_acq function when you want the acquisition to stop.</dd>
+<dt><strong>Return</strong>:</dt>
+<dd>void</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">How to use python_andor.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="start.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#practical-example">Practical example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">Filter Wheel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitation.html">Limitation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="limitation.html#exposure-time">Exposure Time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="limitation.html#acquisition-mode">Acquisition Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performances</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">python_andor</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="start.html">How to use python_andor.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">Filter Wheel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitation.html">Limitation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performances</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="start.html" title="next chapter">How to use python_andor.py</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Jonathan St-Antoine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
