@@ -27,12 +27,12 @@ class command:
         self.child_video = 0
         self.initialize()
         self.path_data_linux = "/home/pesto/data_andor/"
-        self.type_acq = 'video'
+        self.type_acq = 'Video'
         self.stop=0
         self.filter = "NA"
         self.working_path_win = ""
         self.obj_name = 'default'
-        self.d = {'Target' : 0, 'video': 1, 'dark' : 2, 'flat' : 3}
+        self.d = {'Target' : 0, 'Video': 1, 'Dark' : 2, 'Flat' : 3}
          
     def initialize(self):
         '''
@@ -65,13 +65,13 @@ class command:
         if 'Target' in self.type_acq:
             self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"+self.obj_name+"/"
             return 0
-        elif 'video' in self.type_acq:
+        elif 'Video' in self.type_acq:
             self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
             return 0
-        elif 'flat' in self.type_acq:
+        elif 'Flat' in self.type_acq:
             self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
             return 0
-        elif 'dark' in self.type_acq:
+        elif 'Dark' in self.type_acq:
             self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
             return 0
         else:
@@ -182,9 +182,9 @@ class command:
             return -1 if fails, void if successfull
         '''
         if 'Target' in mode: self.type_acq = 'Target'
-        elif 'video' in mode : self.type_acq = 'video'
-        elif 'flat' in mode : self.type_acq = 'flat'
-        elif 'dark' in mode : self.type_acq = 'dark'
+        elif 'Video' in mode : self.type_acq = 'Video'
+        elif 'Flat' in mode : self.type_acq = 'Flat'
+        elif 'Dark' in mode : self.type_acq = 'Dark'
         else:
             return -1
     def video_flux(self):
@@ -209,15 +209,15 @@ class command:
             ii) the video flux will be automatically launched after exposuretime+2 secondes
         '''
         if 'video' in kwargs and kwargs.get('video'):
-            self.acq_mode('video')
+            self.acq_mode('Video')
         else:
             while (1):
-                out = raw_input('acq mode: [Target, video, dark, flat]: ')
+                out = raw_input('acq mode: [Target, Video, Dark, Flat]: ')
                 if out in self.d:
                     self.acq_mode(out)
                     break
         if 'video' in kwargs and kwargs.get('video'):  
-            self.obj_name = 'video'
+            self.obj_name = 'Video'
         else:
             self.obj_name = raw_input('Name of the object: ')
         while(1):
