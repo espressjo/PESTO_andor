@@ -20,7 +20,7 @@ class command:
             **working_path_win**: path on the window machine. Will varie in function of the type of acq, dates and object name
             
         '''
-        self.cwd = '/home/pesto/data_andor/tcl/'
+        self.cwd = '/home/pesto/data_andor/andor/tcl/'
         self.child = 0
         self.filter_dict = {'H':0,'g':1,'r':2,'i':3,'z':4,'Ha':5,'HA':5,'ha':5,'open':0,'h':0}
         self.filter_arr = ["open","g'","r'","i'","z'","Ha'"]
@@ -196,7 +196,7 @@ class command:
         '''
         print "starting video."
         path = self.path_data_linux[:-1]+self.working_path_win
-        self.child_video = spawn('/usr/bin/python %s/python/video.py %s'%(self.path_data_linux,path),timeout=2)
+        self.child_video = spawn('/usr/bin/python %s/andor/python/video.py %s'%(self.path_data_linux,path),timeout=2)
     def script(self,**kwargs):
         '''
         **Description**:
