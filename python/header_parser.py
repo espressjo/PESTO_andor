@@ -37,10 +37,10 @@ def parse_telmeteo():
     for line in output.split('\n'):
         if 'Hin' in line: d['Hin'] = float(line.strip('Hin:').strip('%'))
         if 'Hout' in line: d['Hout'] = float(line.strip('Hout:').strip('%'))
-        if 'Tin' in line: d['Tin'] = float(line.strip('Tin:').strip('\xe2\x84\x83'))
-        if 'Tmir' in line: d['Tmir'] = float(line.strip('Tmiror:').strip('\xe2\x84\x83'))
-        if 'Tout' in line: d['Tout'] = float(line.strip('Tout:').strip('\xe2\x84\x83'))
-        if 'Tstruct' in line: d['Tstruct'] = float(line.strip('Tstruct:').strip('\xe2\x84\x83'))
+        if 'Tin' in line: d['Tin'] = float(line.replace('Tin:','').replace('°C',""))
+        if 'Tmir' in line: d['Tmir'] = float(line.replace('Tmirror:','').replace('°C',""))
+        if 'Tout' in line: d['Tout'] = float(line.replace('Tout:','').replace('°C',""))
+        if 'Tstruct' in line: d['Tstruct'] = float(line.replace('Tstruct:','').replace('°C',""))
     if len(d)!=6:
         print("problem parsing telmeteo")
         return -1
