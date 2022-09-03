@@ -3,7 +3,10 @@ from os import walk
 
 def __find_between_r( s):
     if s and 'fits' in s:
-        return int(s.split('/')[-1].split('_')[-1].strip('.fits'))
+        try:
+            return int(s.split('/')[-1].split('_')[-1].strip('.fits'))
+        except:
+            return -1
     else:
         return -1
 def get_inc(path)  :   
