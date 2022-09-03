@@ -232,10 +232,10 @@ class command:
             expT = raw_input("exposure time? (in seconds): ")
             if self.__check_digit(expT)!=-1:
                 break
-        print "updating the header"
+        print("updating the header")
         if not 'no_header' in kwargs and not kwargs.get('no_header'):
             if self.set_header()==-1:
-                print "Unable to set the header. You can manually update the header using the set_header() function than use the no_header=True argument in script() function."
+                print("Unable to set the header. You can manually update the header using the set_header() function than use the no_header=True argument in script() function.")
         
         self.acq(65000,float(expT),nowoof=True)
         sleep(float(expT)+2)
@@ -292,14 +292,14 @@ class command:
         if "'" in filtre:
             filtre = filtre.strip("'")
         if not filtre in self.filter_dict:
-            print "Wrong filter choice"            
+            print("Wrong filter choice")          
             return -1
         pos = self.filter_dict[filtre]
          
         chld = spawn("fwandor %d"%(pos),cwd=self.cwd)
         out = chld.expect(EOF)
         if out==0:
-            print "filter set successfully to %s"%self.filter_arr[pos]
+            print("filter set successfully to %s"%self.filter_arr[pos])
             self.filter = self.filter_arr[pos]
         else:
             self.filter = "NA"
