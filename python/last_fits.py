@@ -9,7 +9,7 @@ def flf(path):
     '''
     ls = subprocess.Popen(["stat -c '%X %n' *.fits | sort -k1n | tail -1"],shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE,cwd=path)
     out,err = ls.communicate()
-    o = out.split(' ')
+    o = out.decode().split(' ')
     
     if len(o)!=2:
         return -1
@@ -23,7 +23,7 @@ def flfgz(path):
     '''
     ls = subprocess.Popen(["stat -c '%X %n' *.fits.gz | sort -k1n | tail -1"],shell=True,stderr=subprocess.PIPE,stdout=subprocess.PIPE,cwd=path)
     out,err = ls.communicate()
-    o = out.split(' ')
+    o = out.decode().split(' ')
     
     if len(o)!=2:
         return -1

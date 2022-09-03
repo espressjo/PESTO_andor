@@ -180,6 +180,8 @@ class command:
             return void once the nb. of exposure is acquired
         '''
         self.set_path()
+        if self.working_path_win[-1]!='/':
+            self.working_path_win = self.working_path_win+'/'
         self.child.send('send { acqui %d %d %1.2f %s %s }\n'%(nbExp,self.__inc()+1,expTime,self.working_path_win,self.obj_name))
         self.child.expect('%')
         if not 'nowoof' in kwargs and not kwargs.get('nowoof'):

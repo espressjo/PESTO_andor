@@ -11,6 +11,7 @@ def parse_telinfo():
     child = Popen(['telinfo'],stderr=PIPE,stdout=PIPE)
     output,err = child.communicate()
     if not output: return -1
+    output = output.decode()
     if not 'HA' in output: return -1
     for line in output.split("\n"):
         if 'RA' in line and len(line.split(':'))>3: d['RA'] = __convRA(line.split('RA:')[1])    
@@ -31,6 +32,7 @@ def parse_telmeteo():
     child = Popen(['telmeteo'],stderr=PIPE,stdout=PIPE)
     output,err = child.communicate()
     if not output: return -1
+    output = output.decode()
     if not 'Hin' in output: return -1
     for line in output.split('\n'):
         if 'Hin' in line: d['Hin'] = float(line.strip('Hin:').strip('%'))
