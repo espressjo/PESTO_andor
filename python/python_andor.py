@@ -5,7 +5,13 @@ from last_fits import flf
 from subprocess import Popen
 from header_parser import parse_telmeteo,parse_telinfo
 from get_inc import get_inc
-from os.path import join
+from os.path import join as osjoin
+def join(p1,p2):
+    if p2[0]=='/':
+        p2 = p2[1:]
+    return osjoin(p1,p2)
+    
+
 class command:
     def __init__(self,path_data="/home/pesto/data_andor/",tcl_path='/home/pesto/data_andor/andor/tcl/'):
         '''
