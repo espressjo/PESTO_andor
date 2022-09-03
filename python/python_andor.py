@@ -87,7 +87,7 @@ class command:
         **Return**:
             void
         '''
-        path = join(self.path_data_linux[:-1],self.working_path_win)
+        path = join(self.path_data_linux,self.working_path_win)
         print("watch dog woofing in %s"%(path))
         last_file = "default"
         i = 0
@@ -203,8 +203,8 @@ class command:
             Normally this function is not used interactivelly
         '''
         print("starting video.")
-        path = join(self.path_data_linux[:-1],self.working_path_win)
-        self.child_video = spawn('/usr/bin/python %s/andor/python/video.py %s'%(self.path_data_linux,path),timeout=2)
+        path = join(self.path_data_linux,self.working_path_win)
+        self.child_video = spawn('/usr/bin/python %s %s'%(join(self.path_data_linux,"andor/python/video.py"),path),timeout=2)
     def script(self,**kwargs):
         '''
         **Description**:
@@ -220,16 +220,16 @@ class command:
             self.acq_mode('Video')
         else:
             while (1):
-                out = raw_input('acq mode: [Target, Video, Dark, Flat]: ')
+                out = input('acq mode: [Target, Video, Dark, Flat]: ')
                 if out in self.d:
                     self.acq_mode(out)
                     break
         if 'video' in kwargs and kwargs.get('video'):  
             self.obj_name = 'Video'
         else:
-            self.obj_name = raw_input('Name of the object: ')
+            self.obj_name = input('Name of the object: ')
         while(1):
-            expT = raw_input("exposure time? (in seconds): ")
+            expT = input("exposure time? (in seconds): ")
             if self.__check_digit(expT)!=-1:
                 break
         print("updating the header")
