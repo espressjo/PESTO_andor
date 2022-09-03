@@ -27,7 +27,7 @@ class command:
         self.filter_arr = ["open","g'","r'","i'","z'","Ha'"]
         self.child_video = 0
         self.initialize()
-        self.path_data_linux = data_path
+        self.path_data_linux = path_data
         
         self.type_acq = 'Video'
         self.stop=0
