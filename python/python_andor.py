@@ -5,8 +5,9 @@ from last_fits import flf
 from subprocess import Popen
 from header_parser import parse_telmeteo,parse_telinfo
 from get_inc import get_inc
+from os.path import join
 class command:
-    def __init__(self):
+    def __init__(self,path_data="/home/pesto/data_andor/",tcl_path='/home/pesto/data_andor/andor/tcl/'):
         '''
         **Description**:
             Initialization of the class.\n
@@ -20,13 +21,14 @@ class command:
             **working_path_win**: path on the window machine. Will varie in function of the type of acq, dates and object name
             
         '''
-        self.cwd = '/home/pesto/data_andor/andor/tcl/'
+        self.cwd = tcl_path
         self.child = 0
         self.filter_dict = {'H':0,'g':1,'r':2,'i':3,'z':4,'Ha':5,'HA':5,'ha':5,'open':0,'h':0}
         self.filter_arr = ["open","g'","r'","i'","z'","Ha'"]
         self.child_video = 0
         self.initialize()
-        self.path_data_linux = "/home/pesto/data_andor/"
+        self.path_data_linux = data_path
+        
         self.type_acq = 'Video'
         self.stop=0
         self.filter = "NA"
@@ -41,7 +43,7 @@ class command:
         **Return**:
             void
         '''
-        print "initializing..."
+        print("initializing...")
         self.child = spawn('/usr/local/bin/tclsh8.5',timeout=20,cwd=self.cwd)
         self.child.send('source client.tcl\n')
         self.child.expect('%')
@@ -63,16 +65,16 @@ class command:
             This function will return 0 if succesffull or -1 if it failed.
         '''
         if 'Target' in self.type_acq:
-            self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"+self.obj_name+"/"
+            self.working_path_win = join(join("/"+racine(),self.type_acq),self.obj_name)
             return 0
         elif 'Video' in self.type_acq:
-            self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
+            self.working_path_win = join("/"+racine(),self.type_acq)
             return 0
         elif 'Flat' in self.type_acq:
-            self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
+            self.working_path_win = join("/"+racine(),self.type_acq)
             return 0
         elif 'Dark' in self.type_acq:
-            self.working_path_win = "/"+racine()+"/"+self.type_acq+"/"
+            self.working_path_win = join("/"+racine(),self.type_acq)
             return 0
         else:
             return -1
@@ -85,8 +87,8 @@ class command:
         **Return**:
             void
         '''
-        path = self.path_data_linux[:-1]+self.working_path_win
-        print "watch dog woofing in %s"%(path)
+        path = join(self.path_data_linux[:-1],self.working_path_win)
+        print("watch dog woofing in %s"%(path))
         last_file = "default"
         i = 0
         fivemin = int(60*5./expT)
@@ -95,20 +97,20 @@ class command:
             sleep(expT+2)
             i+=1
             name = flf(path)
-            print name
+            print(name)
             if name==-1:
-                print "name"
+                print("name")
                 continue
             if name == last_file:
                 break
             if i>fivemin:
                 i=0
-                print "woofing: %s is the last file"%name
+                print("woofing: %s is the last file"%name)
             if self.stop==1:
                 break
             last_file = name
                 
-        print "::::::::::::::: Exposure Done!! :::::::::::::::::::"
+        print("::::::::::::::: Exposure Done!! :::::::::::::::::::")
         self.stop = 0  
     def __check_digit(self,a):
         '''
@@ -154,8 +156,10 @@ class command:
         This function returns the last increment of the fits file in path_working_win
         '''
         inc = get_inc(self.path_data_linux)
-        if inc==-1:return 1
-        else: return inc
+        if inc==-1:
+            return 1
+        else: 
+            return inc
     def acq(self,nbExp,expTime,**kwargs):
         '''
         **Description**:
@@ -181,10 +185,14 @@ class command:
         **Return**:
             return -1 if fails, void if successfull
         '''
-        if 'Target' in mode: self.type_acq = 'Target'
-        elif 'Video' in mode : self.type_acq = 'Video'
-        elif 'Flat' in mode : self.type_acq = 'Flat'
-        elif 'Dark' in mode : self.type_acq = 'Dark'
+        if 'Target' in mode: 
+            self.type_acq = 'Target'
+        elif 'Video' in mode : 
+            self.type_acq = 'Video'
+        elif 'Flat' in mode : 
+            self.type_acq = 'Flat'
+        elif 'Dark' in mode : 
+            self.type_acq = 'Dark'
         else:
             return -1
     def video_flux(self):
@@ -194,8 +202,8 @@ class command:
         **Note**:
             Normally this function is not used interactivelly
         '''
-        print "starting video."
-        path = self.path_data_linux[:-1]+self.working_path_win
+        print("starting video.")
+        path = join(self.path_data_linux[:-1],self.working_path_win)
         self.child_video = spawn('/usr/bin/python %s/andor/python/video.py %s'%(self.path_data_linux,path),timeout=2)
     def script(self,**kwargs):
         '''

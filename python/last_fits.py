@@ -1,5 +1,5 @@
 import subprocess
-
+from os.path import join
 def flf(path):
     '''
     **Description**:
@@ -13,7 +13,7 @@ def flf(path):
     
     if len(o)!=2:
         return -1
-    return path+o[1].strip('\n')
+    return join(path,o[1].strip('\n'))
 def flfgz(path):
     '''
     **Description**:
@@ -27,7 +27,7 @@ def flfgz(path):
     
     if len(o)!=2:
         return -1
-    return path+o[1].strip('\n')
+    return join(path,o[1].strip('\n'))
 
 
 

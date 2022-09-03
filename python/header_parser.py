@@ -24,7 +24,7 @@ def parse_telinfo():
     if len(d)==8:
         return d
     else:
-        print "header not parsed properly"
+        print("header not parsed properly")
         return -1
 def parse_telmeteo():
     d = {}
@@ -40,7 +40,7 @@ def parse_telmeteo():
         if 'Tout' in line: d['Tout'] = float(line.strip('Tout:').strip('\xe2\x84\x83'))
         if 'Tstruct' in line: d['Tstruct'] = float(line.strip('Tstruct:').strip('\xe2\x84\x83'))
     if len(d)!=6:
-        print "problem parsing telmeteo"
+        print("problem parsing telmeteo")
         return -1
     else:
         return d
