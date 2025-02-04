@@ -35,12 +35,12 @@ def parse_telmeteo():
     output = output.decode()
     if not 'Hin' in output: return -1
     for line in output.split('\n'):
-        if 'Hin' in line: d['Hin'] = float(line.strip('Hin:').strip('%'))
-        if 'Hout' in line: d['Hout'] = float(line.strip('Hout:').strip('%'))
-        if 'Tin' in line: d['Tin'] = float(line.replace('Tin:','').replace('°C',""))
-        if 'Tmir' in line: d['Tmir'] = float(line.replace('Tmirror:','').replace('°C',""))
-        if 'Tout' in line: d['Tout'] = float(line.replace('Tout:','').replace('°C',""))
-        if 'Tstruct' in line: d['Tstruct'] = float(line.replace('Tstruct:','').replace('°C',""))
+        if 'Hin' in line: d['Hin'] = float(line.replace('Hin:',"").strip('%'))
+        if 'Hout' in line: d['Hout'] = float(line.replace('Hout:',"").strip('%'))
+        if 'Tin' in line: d['Tin'] = float(line.replace('Tin:',"").replace('℃',""))
+        if 'Tmir' in line: d['Tmir'] = float(line.replace('Tmirror:',"").replace('℃',""))
+        if 'Tout' in line: d['Tout'] = float(line.replace('Tout:',"").replace('℃',""))
+        if 'Tstruct' in line: d['Tstruct'] = float(line.replace('Tstruct:',"").replace('℃',""))
     if len(d)!=6:
         print("problem parsing telmeteo")
         return -1
