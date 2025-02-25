@@ -1,6 +1,5 @@
 import os
 from time import sleep 
-
 import subprocess
 environment = os.environ.copy()
 if "PYTHONPATH" in environment:
@@ -18,13 +17,17 @@ class andorfeed:
         return True if self.process.poll() == None else False 
     def launch(self,path):
         if not os.path.isdir(path):
-            raise Exception("path does not exist")
-            return False
+            os.mkdir(path)
+            print(path," created")
         if self.running:
             raise Exception("video feed is already started")
             return False
         self.process = subprocess.Popen(["python","_vfeed.py",path],env=environment)
         return True
+
+    def __del__(self):
+        if self.running:
+            self.process.kill()
     def kill(self):
         if self.process != None:
             self.process.kill()

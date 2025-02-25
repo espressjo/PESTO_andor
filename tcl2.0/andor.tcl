@@ -64,7 +64,7 @@ set start $increment
 set stop [ expr {$start + $nbImage } ]
 
 #check if the folder exist, if not create it
-file mkdir "Z:$fld"
+file mkdir "Y:$fld"
 #main acquisition loop
 
 
@@ -97,8 +97,8 @@ for {set k $start} {$k<$stop} {incr k} {
     }
     set increment [ expr {$increment + 1} ]
     set inc  [format %2.10d $increment]
-    console::affiche_resultat "Saving:  Z:$fld$racine\_$inc.fits"
-    saveima "Z:$fld$racine\_$inc.fits"
+    console::affiche_resultat "Saving:  Y:$fld$racine\_$inc.fits"
+    saveima "Y:$fld$racine\_$inc.fits"
 }
 
 global stop_acq

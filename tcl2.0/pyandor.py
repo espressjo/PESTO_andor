@@ -7,7 +7,7 @@ from videofeed import andorfeed
 IP = "132.204.61.46"
 port_main = 5002
 port_abort = 5003
-LOCALPATH = "/home/data_andor"
+LOCALPATH = "/home/andor"
 
 class andor(pytcl,andorfeed):
     def __init__(self,IP,port=port_main,alternateP=port_abort):
@@ -112,8 +112,9 @@ if '__main__' in __name__:
         _andor.header("test1", "10","Mon commentaire")
         _andor.header("test2", 10,"Mon commentaire")
         _andor.header("test3", 10.1,"Mon commentaire")
-
+        from time import sleep
         _andor.acquisition()
+        sleep(10)
         print("done")
         
         

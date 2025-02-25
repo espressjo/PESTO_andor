@@ -31,6 +31,7 @@ if '__main__' in __name__:
         if lfits == None:
             sleep(0.5)
         if lfits!=lfits_old:
+            sleep(0.08)
             ims.sendImageSimple(lfits)
             lfits_old = lfits
 
