@@ -32,6 +32,7 @@ class pytcl:
         if alternate:
             return self.write_alternate(c)
         else:
+            
             return self.write(c)
     def write_alternate(self,cmd):
         try:

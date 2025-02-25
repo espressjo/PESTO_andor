@@ -10,6 +10,32 @@ global exit_flag
 set exit_flag 0
 global stop_acq
 set stop_acq 0
+global increment
+set increment 1
+global night 
+set night ""
+
+proc get_night {} {
+    global night
+    return $night
+}
+proc set_night {n} {
+    global night
+    set night $n
+    return $night
+}
+proc set_increment {inc} {
+
+    global increment
+    set increment $inc
+    return $increment
+}
+proc get_increment {} {
+    global increment
+    return $increment
+}
+
+
 
 proc set_abort_flag {} {
     global stop_acq
@@ -17,7 +43,7 @@ proc set_abort_flag {} {
     return "abort triggered"
 }
 
-proc acquisition {nbImage inc_start expt fld racine} {
+proc acquisition {nbImage expt fld racine} {
 #this function while acquire N images and save them in the a specific folder
 	#nbImage:	number of images
 	#inc_start:	start increment. image with the same name will be deleted
@@ -25,16 +51,17 @@ proc acquisition {nbImage inc_start expt fld racine} {
 	#fld:		folder where to save the images 
 	#racine:	file prefix 
 #a few display message
+global increment
 console::affiche_resultat "setting exposure time to : $expt s"
 console::affiche_resultat "nbImage: $nbImage\n"
-console::affiche_resultat "increment de depart: $inc_start\n"
+console::affiche_resultat "increment de depart: $increment\n"
 
 #set the exposure time
 cam1 exptime $expt
 
 #set the start and stop increment
-set start $inc_start
-set stop [ expr {$inc_start + $nbImage } ]
+set start $increment
+set stop [ expr {$start + $nbImage } ]
 
 #check if the folder exist, if not create it
 file mkdir "Z:$fld"
@@ -68,8 +95,8 @@ for {set k $start} {$k<$stop} {incr k} {
     if {$exit_flag eq 1 } {
         break
     }
-    
-    set inc  [format %2.10d $k]
+    set increment [ expr {$increment + 1} ]
+    set inc  [format %2.10d $increment]
     console::affiche_resultat "Saving:  Z:$fld$racine\_$inc.fits"
     saveima "Z:$fld$racine\_$inc.fits"
 }
@@ -78,6 +105,25 @@ global stop_acq
 set stop_acq 0
 return 0
 }
+
+
+proc addHeader { KW VALUE TYPE COMMENT} {
+
+    if {$TYPE eq "string"} {
+        buf1 setkwd [list $KW $VALUE string $COMMENT ""]
+    } elseif {$TYPE eq "float"} {
+        buf1 setkwd [list $KW $VALUE float $COMMENT ""]
+    } elseif {$TYPE eq "int"} {
+        buf1 setkwd [list $KW $VALUE int $COMMENT ""]
+    }
+
+}
+proc test {test} {
+
+
+    return $test
+}
+
 
 
 

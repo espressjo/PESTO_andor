@@ -13,6 +13,7 @@ clean:
 install: folders
 	@cp ./C++/filterwheel/src/fwandor $(BASE)/bin/ #copy binary filterwheel
 	@cp ./python/*.py $(BASE)/python/
+	@cp ./tcl2.0/andor.tcl /home/andor/
 
 install-tclsh85:
 	@cd dependencies && make install

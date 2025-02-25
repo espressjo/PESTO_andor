@@ -11,6 +11,7 @@ def __find_between_r( s):
         return -1
 def get_inc(path)  :   
     files = [join(root,f) for root,_,the_files in walk(path) for f in the_files if f.lower().endswith(".fits")]
+    
     if len(files)!=0:
         List = sorted(files,key=getctime)
         most_recent_file = __find_between_r(str(List[-1]))
