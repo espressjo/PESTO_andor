@@ -22,7 +22,7 @@ class andorfeed:
         if self.running:
             raise Exception("video feed is already started")
             return False
-        self.process = subprocess.Popen(["python","_vfeed.py",path],env=environment)
+        self.process = subprocess.Popen(["python","/opt/andor2.0/python/_vfeed.py",path],env=environment)
         return True
 
     def __del__(self):
