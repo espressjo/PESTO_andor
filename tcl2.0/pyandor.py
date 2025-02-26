@@ -95,14 +95,14 @@ class andor(pytcl,andorfeed):
         tcs.disconnect()
     def increment_verification(self):
         _night = racine()
-        print("[debug] ",_night)
+        #print("[debug] ",_night)
         tcl_night = self.rcmd("get_night")
-        print("[debug] ",tcl_night)
+        #print("[debug] ",tcl_night)
         if _night not in tcl_night:
             print("TCL night not difined")
-            print(self.rcmd(f'set_night "{_night}"'))
+            self.rcmd(f'set_night "{_night}"')
             i = get_inc(join(self.local_path,_night))
-            print("[debug] ",i)
+            #print("[debug] ",i)
             if i<=0:
                 i=1
             #print("test: ",self.rcmd(f'set_increment {i}'))
