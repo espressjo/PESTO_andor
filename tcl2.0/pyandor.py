@@ -105,7 +105,7 @@ class andor(pytcl,andorfeed):
             print("[debug] ",i)
             if i<=0:
                 i=1
-            print("test: ",self.rcmd(f'set_increment {i}'))
+            #print("test: ",self.rcmd(f'set_increment {i}'))
     def __str__(self):
         txt="Andor Camera Parameters\n"
         txt+="----------------------\n"
@@ -148,7 +148,9 @@ class andor(pytcl,andorfeed):
     def initialisation(self):
         return self.rcmd("cam1 electronic 1 0 1 2 0 1") 
     def flat(self,hithreshold=10000,lothreshold=7000):
-        self.objet("flat")
+        _night = racine()
+        p = join(self.local_path,_night)
+        self.objet = "flat" 
         self.setType("Video")
         self.set_nb_images(1)
         self.setExpTime(1)
@@ -156,7 +158,7 @@ class andor(pytcl,andorfeed):
         sleep(0.6)
         while(self.inacq()):
             sleep(0.3)
-        lf1 = findlast()
+        lf1 = findlast(p)
         if not lf1:
             print("script failed")
             return 
@@ -166,17 +168,18 @@ class andor(pytcl,andorfeed):
         sleep(0.6)
         while(self.inacq()):
             sleep(0.3)
-        lf2 = findlast()
+        lf2 = findlast(p)
         if not lf2:
             print("script failed")
             return
-
+        import numpy as np
         from astropy.io import fits 
         flux = np.nanmedian( (fits.getdata(lf2)-fits.getdata(lf1)).ravel() )
-        if flux > hithreshold:
+        if flux > hithreshold:
             print("lamp is too bright")
             return 
         expTime = 8000./flux
+        print("flux level: %.1fADU/s"%flux)
         print("estimated integration time is %.1fs"%expTime)
         if 'yes' not in input("Do you want to proceed? [yes/no]"):
             return 
@@ -201,6 +204,7 @@ class andor(pytcl,andorfeed):
     def temp(self):
         self.setType("Video")
         self.objet = ""
+        self.set_nb_images(8*3600)
         self.acquisition()
     def acquisition(self):
         #acquisition $nbimages $increment $expt $path $basename
@@ -258,16 +262,5 @@ if '__main__' in __name__:
         _andor.set_nb_images(2)
         _andor.initialisation()
         print(_andor)
-        
-        #print("setting fw...")        
-        #_andor.fw("open")
-        print("setting test header")
-        #_andor.header("test1", "10","Mon commentaire")
-        #_andor.header("test2", 10,"Mon commentaire")
-        #_andor.header("test3", 10.1,"Mon commentaire")
-        from time import sleep
-        _andor.acquisition()
-        sleep(10)
-        print("done")
-        
+        _andor.flat() 
         
