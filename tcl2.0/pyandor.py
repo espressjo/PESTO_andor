@@ -103,7 +103,6 @@ class andor(pytcl,andorfeed):
             if i<=0:
                 i=1
             print("test: ",self.rcmd(f'set_increment {i}'))
- 
     def __str__(self):
         txt="Andor Camera Parameters\n"
         txt+="----------------------\n"
@@ -112,7 +111,7 @@ class andor(pytcl,andorfeed):
         txt+=f"Integration (s): {self.expTime}\n"
         txt+=f"Obj. Name: {self.objet}\n"
         txt+=f"Mode: {self.mode}\n"
-        c_inc = self.rcmd("get_increment")
+        c_inc = self.rcmd("get_increment",True)
         txt+=f"Current increment: {c_inc}\n"
         return txt
     def value_type(self,value):
