@@ -103,6 +103,8 @@ for {set k $start} {$k<$stop} {incr k} {
 
 global stop_acq
 set stop_acq 0
+global exit_flag
+set exit_flag 0
 return 0
 }
 
