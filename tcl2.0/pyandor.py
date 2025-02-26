@@ -20,17 +20,50 @@ class andor(pytcl,andorfeed):
         self.basePath = "video"
         self.type_list = {'Target','Video','Flat','Dark','Bias'}
         self.feed = andorfeed()
-        self.basename = "test"
+        self.objet = "test"
         self.local_path = LOCALPATH
         self.head_dict = {}
         self.relaunchfeed()
+        self.fwOK = False
+    def fw(self,position):
+        if not self.fwOK:
+            print("initializing filter wheel")
+            if 'open' not in os.popen("/opt/pesto/bin/fwandor open").read().strip():
+                return -1
+
+            self.fwOK = True
+        if position not in os.popen(f"/opt/pesto/bin/fwandor {position} -nocheck").read().strip():
+            return -1 
+        return 0
+
+    def getfwposition(self):
+        return os.popen("/opt/pesto/bin/fwandor -getposition -nocheck").read().strip()
     def relaunchfeed(self):
         if self.running:
             self.kill()
 
         P = join(self.local_path,racine())
         self.launch(P)
-
+    def setHeader(self):
+        #do something
+        
+        #get some info 
+        tcs = tcs()
+        weather = tcs.tel_meteo()
+        if self.fwOK:
+            f = self.getfwposition()
+        else:
+            f = "not init."
+        self.header("FILTRE",f,"Filter used")
+        self.header("EXPOSURE",self.expTime,"The effective exposure time in milliseconds")
+        self.header("HUMIN",weather["Hin"],"Interior humidity (%)")
+        self.header("HUMOUT",weather["Hout"],"Exterior humidity (%)")
+        self.header("TEMPIN",weather["Tin"],"Interior temperature (C)")
+        self.header("TEMPOUT",weather["Tout"],"Exterior temperature (C)")
+        self.header("TEMPST",weather["Tstruct"],"Telescope structure temperature (C)")
+        self.header("TEMPM",weather["Tmir"],"Mirror temperature (C)")
+        self.header("OBJECT",self.objet,"object name")
+        self.header("SOFTV","2.0","acquisition software version")
     def increment_verification(self):
         _night = racine()
         print("[debug] ",_night)
@@ -38,7 +71,7 @@ class andor(pytcl,andorfeed):
         print("[debug] ",tcl_night)
         if _night not in tcl_night:
             print("TCL night not difined")
-            print(self.rcmd(f'set_night "{_night}"'))
+        /    print(self.rcmd(f'set_night "{_night}"'))
             i = get_inc(join(self.local_path,_night))
             print("[debug] ",i)
             print(self.rcmd(f'set_increment {i}'))
@@ -49,7 +82,7 @@ class andor(pytcl,andorfeed):
         txt+=f"Type: {self.type}\n"
         txt+=f"Image requested: {self.nbImage}\n"
         txt+=f"Integration (s): {self.expTime}\n"
-        txt+=f"Obj. Name: {self.basename}\n"
+        txt+=f"Obj. Name: {self.objet}\n"
         txt+=f"Mode: {self.mode}\n"
         return txt
     def value_type(self,value):
@@ -59,20 +92,16 @@ class andor(pytcl,andorfeed):
             return "float"
         else :
             return "string"
-    def u_header(self,keywd,value):
+    def header(self,keywd,value,comments=""):
+        #update and create a header entry
         if keywd not in self.head_dict:
-            raise ValueError("Invalid keyword")
-            return 
-        self.rcmd(f'addHeader {keywd} {value} {self.value_type(value)} "{self.head_dict[keywd]}"')
-
-    def header(self,keywd,value,comments):
-        
-        self.head_dict[keywd] = comments
-        return self.rcmd(f'addHeader {keywd} {value} {self.value_type(value)} "{comments}"')
+            self.rcmd(f'addHeader {keywd} {value} {self.value_type(value)} "{comments}"')
+        else:
+            self.rcmd(f'addHeader {keywd} {value} {self.value_type(value)} "{self.head_dict[keywd]}"')
     def make_folder(self):
         _p = join(racine(),self.type)
         if 'Target' in self.type:
-            _p = join(_p,self.basename) 
+            _p = join(_p,self.objet) 
         return _p
     def setExpTime(self,exp):
         self.expTime = exp
@@ -95,7 +124,9 @@ class andor(pytcl,andorfeed):
         if path[-1]!='/':
             path = path +"/" 
         self.increment_verification()
-        self.rcmd(f"acquisition {self.nbImage} {self.expTime} {path} {self.basename}")
+        _basename = racine()
+        self.rcmd(f"acquisition {self.nbImage} {self.expTime} {path} {_basename}")
+        
     def abort(self):
         #open a server connection for the abort thread
         return self.rcmd("set_abort_flag",True)
