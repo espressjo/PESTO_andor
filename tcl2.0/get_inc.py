@@ -19,4 +19,13 @@ def get_inc(path)  :
         most_recent_file = -1
         
     return most_recent_file
+def findlast(path):
+    files = [join(root,f) for root,_,the_files in walk(path) for f in the_files if f.lower().endswith(".fits")]
+    
+    if len(files)!=0:
+        List = sorted(files,key=getctime)
+        return str(List[-1])
+    else:
+        return  ""
+     
 

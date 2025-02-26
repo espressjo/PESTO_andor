@@ -14,7 +14,7 @@ global increment
 set increment 1
 global night 
 set night ""
-
+global acq_status 0
 proc get_night {} {
     global night
     return $night
@@ -35,7 +35,11 @@ proc get_increment {} {
     return $increment
 }
 
+proc get_acq_status {}{
 
+  global acq_status
+  return $acq_status
+}
 
 proc set_abort_flag {} {
     global stop_acq
@@ -52,6 +56,8 @@ proc acquisition {nbImage expt fld racine} {
 	#racine:	file prefix 
 #a few display message
 global increment
+global acq_status 
+set acq_status 1
 console::affiche_resultat "setting exposure time to : $expt s"
 console::affiche_resultat "nbImage: $nbImage\n"
 console::affiche_resultat "increment de depart: $increment\n"
@@ -100,7 +106,8 @@ for {set k $start} {$k<$stop} {incr k} {
     console::affiche_resultat "Saving:  Y:$fld$racine\_$inc.fits"
     saveima "Y:$fld$racine\_$inc.fits"
 }
-
+global acq_status 
+set acq_status 0
 global stop_acq
 set stop_acq 0
 global exit_flag

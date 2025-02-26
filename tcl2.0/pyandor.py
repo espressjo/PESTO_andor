@@ -6,7 +6,8 @@ from os import popen
 from os.path import join 
 from tcs import tcs
 from pytcl import pytcl
-from get_inc import get_inc
+from get_inc import get_inc,findlast
+from time import sleep
 from racine import racine
 from videofeed import andorfeed
 IP = "132.204.61.46"
@@ -23,7 +24,7 @@ class andor(pytcl,andorfeed):
         self.type = 'Video'
         self.mode = 'conventional'
         self.basePath = "video"
-        self.type_list = {'Target','Video','Flat','Dark','Bias'}
+        self.type_list = {'Target','Video','DomeFlat','Dark','Bias'}
         self.feed = andorfeed()
         self.objet = "test"
         self.local_path = LOCALPATH
@@ -48,6 +49,8 @@ class andor(pytcl,andorfeed):
             self.kill()
         P = join(self.local_path,racine())
         self.launch(P)
+    def inacq(self):
+        return True if "1" in self.rcmd("get_acq_status",True) else False
     def setHeader(self):
         #do something
         
@@ -144,6 +147,61 @@ class andor(pytcl,andorfeed):
         return self.rcmd('console::affiche_resultat "%s"'%txt)
     def initialisation(self):
         return self.rcmd("cam1 electronic 1 0 1 2 0 1") 
+    def flat(self,hithreshold=10000,lothreshold=7000):
+        self.objet("flat")
+        self.setType("Video")
+        self.set_nb_images(1)
+        self.setExpTime(1)
+        self.acquisition()
+        sleep(0.6)
+        while(self.inacq()):
+            sleep(0.3)
+        lf1 = findlast()
+        if not lf1:
+            print("script failed")
+            return 
+        
+        self.setExpTime(2)
+        self.acquisition()
+        sleep(0.6)
+        while(self.inacq()):
+            sleep(0.3)
+        lf2 = findlast()
+        if not lf2:
+            print("script failed")
+            return
+
+        from astropy.io import fits 
+        flux = np.nanmedian( (fits.getdata(lf2)-fits.getdata(lf1)).ravel() )
+        if flux > hithreshold:
+            print("lamp is too bright")
+            return 
+        expTime = 8000./flux
+        print("estimated integration time is %.1fs"%expTime)
+        if 'yes' not in input("Do you want to proceed? [yes/no]"):
+            return 
+        nb = input("how many images?")
+        try:
+            nb = int(nb)
+        except:
+            print("invalibe nb of images")
+            nb = 11 
+        self.setExpTime(expTime)
+        self.set_nb_images(nb)
+        self.setType("DomeFlat")
+        self.acquisition()
+        sleep(0.6)
+        while(self.inacq()):
+            sleep(0.5)
+            print("integrating....")
+        print("done!")
+        return 
+        
+
+    def temp(self):
+        self.setType("Video")
+        self.objet = ""
+        self.acquisition()
     def acquisition(self):
         #acquisition $nbimages $increment $expt $path $basename
         print("setting header...")
