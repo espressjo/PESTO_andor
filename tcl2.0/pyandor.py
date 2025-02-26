@@ -1,7 +1,7 @@
 import os
-from telcible import telcible
-from telmeteo import telmeteo 
-from tcs2 import tcs
+from telcible import telcible as _telcible
+from telmeteo import telmeteo as _telmeteo
+from tcs2 import tcs as _tcs
 from os import popen
 from os.path import join 
 from tcs import tcs
@@ -53,15 +53,15 @@ class andor(pytcl,andorfeed):
         
         #get some info 
         
-        telmeteo = telmeteo()
+        telmeteo = _telmeteo()
         telmeteo.telmeteo()
-        tcs = tcs()
+        tcs = _tcs()
         tcs.telinfo()
         if self.fwOK:
             f = self.getfwposition()
         else:
             f = "NOK"
-        telcible = telcible()
+        telcible = _telcible()
         telcible.telcible()
 
         self.header("EXPOSURE",self.expTime,"The effective exposure time in ms")
@@ -100,7 +100,9 @@ class andor(pytcl,andorfeed):
             print(self.rcmd(f'set_night "{_night}"'))
             i = get_inc(join(self.local_path,_night))
             print("[debug] ",i)
-            print(self.rcmd(f'set_increment {i}'))
+            if i<=0:
+                i=1
+            print("test: ",self.rcmd(f'set_increment {i}'))
  
     def __str__(self):
         txt="Andor Camera Parameters\n"
@@ -169,13 +171,15 @@ class andor(pytcl,andorfeed):
         except:
             raise Exception("Invalid integration time")
             return 
-        telcible = telcible()
+        telcible = _telcible()
         telcible.telcible()
         if telcible.s_info:
-            telcible.OBJET !="0" and telcible.OBJET!="":
-            print(f"{telcible.OBJET} found loaded!")
-            if "yes" in input("Do you want to use this object? [yes/no]: "):
-                self.objet = telcible.OBJET
+            if telcible.OBJET !="0" and telcible.OBJET!="":
+                print(f"{telcible.OBJET} found loaded!")
+                if "yes" in input("Do you want to use this object? [yes/no]: "):
+                    self.objet = telcible.OBJET
+                else:
+                    self.objet = input("Name of the object?: ")
             else:
                 self.objet = input("Name of the object?: ")
         else:

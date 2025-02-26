@@ -30,7 +30,7 @@ if '__main__' in __name__:
         lfits = find_latest_fits(path)
         if lfits == None:
             sleep(0.5)
-        if lfits!=lfits_old:
+        if lfits!=None and lfits!=lfits_old and lfits!="":
             sleep(0.08)
             ims.sendImageSimple(lfits)
             lfits_old = lfits
