@@ -1,4 +1,7 @@
 import os
+from telcible import telcible
+from telmeteo import telmeteo 
+from tcs2 import tcs
 from os import popen
 from os.path import join 
 from tcs import tcs
@@ -43,30 +46,50 @@ class andor(pytcl,andorfeed):
     def relaunchfeed(self):
         if self.running:
             self.kill()
-
         P = join(self.local_path,racine())
         self.launch(P)
     def setHeader(self):
         #do something
         
         #get some info 
-        _tcs = tcs()
-        weather = _tcs.tel_meteo()
+        
+        telmeteo = telmeteo()
+        telmeteo.telmeteo()
+        tcs = tcs()
+        tcs.telinfo()
         if self.fwOK:
             f = self.getfwposition()
         else:
             f = "NOK"
+        telcible = telcible()
+        telcible.telcible()
+
         self.header("EXPOSURE",self.expTime,"The effective exposure time in ms")
-        self.header("HUMIN",weather["Hint"],"Interior humidity (%)")
+        self.header("HUMIN",telmeteo.HIN,"Interior humidity (%)")
         print(f)
         self.header("FILTRE",f,"Filter used")
-        self.header("HUMOUT",weather["Hext"],"Exterior humidity (%)")
-        self.header("TEMPIN",weather["Tint"],"Interior temperature (C)")
-        self.header("TEMPOUT",weather["Text"],"Exterior temperature (C)")
-        self.header("TEMPST",weather["Tstruct"],"Telescope structure temperature (C)")
-        self.header("TEMPM",weather["Tmir"],"Mirror temperature (C)")
+        self.header("HUMOUT",telmeteo.HOUT,"Exterior humidity (%)")
+        self.header("TEMPIN",telmeteo.TIN,"Interior temperature (C)")
+        self.header("TEMPOUT",telmeteo.TOUT,"Exterior temperature (C)")
+        self.header("TEMPST",telmeteo.TSTRUCT,"Telescope structure temperature (C)")
+        self.header("TEMPM",telmeteo.TMIR,"Mirror temperature (C)")
         self.header("OBJECT",self.objet,"object name")
+        #tcs
+        self.header("EPOCH",tcs.EPOCH,"Epoch of the coordinate")
+        self.header("AIRMASS",tcs.AIRMASS,"Airmass")
+        self.header("RA",tcs.RA,"right ascention")
+        self.header("HA",tcs.HA,"hour angle")
+        self.header("DEC",tcs.DEC,"declinaison")
+        self.header("FOCUS",tcs.FOCUS,"Focus of the telescope")
+        self.header("ROTATOR",tcs.ROTATOR,"Angle of the instrument rotator")
+        self.header("YEAR",tcs.YEAR,"Year")
+        self.header("DOME",tcs.DOME,"angle of the dome")
+        self.header("ST",tcs.ST,"Sideral time")
+        self.header("UT",tcs.UT,"Universal time")
+        self.header("PROGRAM",telcible.PROGRAM,"Universal time")
         self.header("SOFTV","2.0","acquisition software version")
+        telmeteo.disconnect()
+        tcs.disconnect()
     def increment_verification(self):
         _night = racine()
         print("[debug] ",_night)
@@ -87,6 +110,8 @@ class andor(pytcl,andorfeed):
         txt+=f"Integration (s): {self.expTime}\n"
         txt+=f"Obj. Name: {self.objet}\n"
         txt+=f"Mode: {self.mode}\n"
+        c_inc = self.rcmd("get_increment")
+        txt+=f"Current increment: {c_inc}\n"
         return txt
     def value_type(self,value):
         if isinstance(value,int):
@@ -107,10 +132,10 @@ class andor(pytcl,andorfeed):
             _p = join(_p,self.objet) 
         return _p
     def setExpTime(self,exp):
-        self.expTime = exp
+        self.expTime = float(exp)
     def set_nb_images(self,nb):
-        self.nbImage = nb 
-    def target(self,type):
+        self.nbImage = int(nb) 
+    def setType(self,type):
         if type not in self.type_list:
             raise ValueError("Invalid type")
         self.type = type
@@ -135,7 +160,36 @@ class andor(pytcl,andorfeed):
     def abort(self):
         #open a server connection for the abort thread
         return self.rcmd("set_abort_flag",True)
-
+    def script(self):
+        self.setType("Target")
+        #integrtion time
+        _expT = input("Integration time (s): ")
+        try:
+            self.setExpTime(_expT)
+        except:
+            raise Exception("Invalid integration time")
+            return 
+        telcible = telcible()
+        telcible.telcible()
+        if telcible.s_info:
+            telcible.OBJET !="0" and telcible.OBJET!="":
+            print(f"{telcible.OBJET} found loaded!")
+            if "yes" in input("Do you want to use this object? [yes/no]: "):
+                self.objet = telcible.OBJET
+            else:
+                self.objet = input("Name of the object?: ")
+        else:
+            self.objet = input("Name of the object?: ")
+        _nb_image = input("Number of images: ")
+        try:
+            self.set_nb_images(_nb_image)
+        except:
+            raise Exception("Invalid number of images")
+            return
+        print("starting acquisition...")
+        self.acquisition()
+            
+            
 if '__main__' in __name__:
     with andor(IP) as _andor:
         print("testing script running...")
