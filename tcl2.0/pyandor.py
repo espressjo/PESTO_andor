@@ -1,5 +1,7 @@
+import os
 from os import popen
 from os.path import join 
+from tcs import tcs
 from pytcl import pytcl
 from get_inc import get_inc
 from racine import racine
@@ -48,18 +50,19 @@ class andor(pytcl,andorfeed):
         #do something
         
         #get some info 
-        tcs = tcs()
-        weather = tcs.tel_meteo()
+        _tcs = tcs()
+        weather = _tcs.tel_meteo()
         if self.fwOK:
             f = self.getfwposition()
         else:
             f = "not init."
+        self.header("EXPOSURE",self.expTime,"The effective exposure time in ms")
+        self.header("HUMIN",weather["Hint"],"Interior humidity (%)")
+        print(f)
         self.header("FILTRE",f,"Filter used")
-        self.header("EXPOSURE",self.expTime,"The effective exposure time in milliseconds")
-        self.header("HUMIN",weather["Hin"],"Interior humidity (%)")
-        self.header("HUMOUT",weather["Hout"],"Exterior humidity (%)")
-        self.header("TEMPIN",weather["Tin"],"Interior temperature (C)")
-        self.header("TEMPOUT",weather["Tout"],"Exterior temperature (C)")
+        self.header("HUMOUT",weather["Hext"],"Exterior humidity (%)")
+        self.header("TEMPIN",weather["Tint"],"Interior temperature (C)")
+        self.header("TEMPOUT",weather["Text"],"Exterior temperature (C)")
         self.header("TEMPST",weather["Tstruct"],"Telescope structure temperature (C)")
         self.header("TEMPM",weather["Tmir"],"Mirror temperature (C)")
         self.header("OBJECT",self.objet,"object name")
@@ -71,7 +74,7 @@ class andor(pytcl,andorfeed):
         print("[debug] ",tcl_night)
         if _night not in tcl_night:
             print("TCL night not difined")
-        /    print(self.rcmd(f'set_night "{_night}"'))
+            print(self.rcmd(f'set_night "{_night}"'))
             i = get_inc(join(self.local_path,_night))
             print("[debug] ",i)
             print(self.rcmd(f'set_increment {i}'))
@@ -117,6 +120,8 @@ class andor(pytcl,andorfeed):
         return self.rcmd("cam1 electronic 1 0 1 2 0 1") 
     def acquisition(self):
         #acquisition $nbimages $increment $expt $path $basename
+        print("setting header...")
+        self.setHeader()
         path = self.make_folder()
         #make sure TCL is happy
         if path[0] !='/':
@@ -138,11 +143,12 @@ if '__main__' in __name__:
         _andor.initialisation()
         print(_andor)
         
-
+        #print("setting fw...")        
+        #_andor.fw("open")
         print("setting test header")
-        _andor.header("test1", "10","Mon commentaire")
-        _andor.header("test2", 10,"Mon commentaire")
-        _andor.header("test3", 10.1,"Mon commentaire")
+        #_andor.header("test1", "10","Mon commentaire")
+        #_andor.header("test2", 10,"Mon commentaire")
+        #_andor.header("test3", 10.1,"Mon commentaire")
         from time import sleep
         _andor.acquisition()
         sleep(10)
