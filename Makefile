@@ -11,7 +11,7 @@ all:
 clean:
 	@cd ./C++/ && make clean
 install: folders
-	@cp ./C++/filterwheel/fwandor $(BASE)/bin/ #copy binary filterwheel
+	#@cp ./C++/filterwheel/fwandor $(BASE)/bin/ #copy binary filterwheel
 	@cp ./tcl2.0/*.py $(BASE)/python/
 	@cp ./tcl2.0/andor.tcl /home/andor/
 
