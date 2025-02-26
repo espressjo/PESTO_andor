@@ -55,7 +55,7 @@ class andor(pytcl,andorfeed):
         if self.fwOK:
             f = self.getfwposition()
         else:
-            f = "not init."
+            f = "NOK"
         self.header("EXPOSURE",self.expTime,"The effective exposure time in ms")
         self.header("HUMIN",weather["Hint"],"Interior humidity (%)")
         print(f)
