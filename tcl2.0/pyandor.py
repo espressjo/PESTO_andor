@@ -198,6 +198,7 @@ if '__main__' in __name__:
     with andor(IP) as _andor:
         print("testing script running...")
         _andor.setExpTime(4)
+        _andor.set_nb_images(2)
         _andor.initialisation()
         print(_andor)
         
