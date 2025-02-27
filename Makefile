@@ -5,6 +5,7 @@ folders:
 	@mkdir -p $(BASE)/config/
 	@mkdir -p $(BASE)/data/
 	@mkdir -p $(BASE)/python/
+	@mkdir -p $(BASE)/config/
 
 all:
 	@cd ./C++/ && make all
@@ -13,7 +14,9 @@ clean:
 install: folders
 	#@cp ./C++/filterwheel/fwandor $(BASE)/bin/ #copy binary filterwheel
 	@cp ./tcl2.0/*.py $(BASE)/python/
+	@cp ./config/andor.cfg $(BASE)/config/andor.conf
 	@cp ./tcl2.0/andor.tcl /home/andor/
+	
 
 install-tclsh85:
 	@cd dependencies && make install

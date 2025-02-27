@@ -10,10 +10,12 @@ from get_inc import get_inc,findlast
 from time import sleep
 from racine import racine
 from videofeed import andorfeed
-IP = "132.204.61.46"
-port_main = 5002
-port_abort = 5003
-LOCALPATH = "/home/andor"
+from andorcfg import get_cfg
+
+IP = get_cfg("WINDOWIP",str)
+port_main = get_cfg("MAINPORT",int)
+port_abort = get_cfg("ABORTPORT",int)
+LOCALPATH = get_cfg("BASENAME",str)
 
 class andor(pytcl,andorfeed):
     def __init__(self,IP,port=port_main,alternateP=port_abort):
@@ -32,18 +34,21 @@ class andor(pytcl,andorfeed):
         self.relaunchfeed()
         self.fwOK = False
     def fw(self,position):
+        fwbin = get_cfg("FWBIN",str)
         if not self.fwOK:
             print("initializing filter wheel")
-            if 'open' not in os.popen("/opt/pesto/bin/fwandor open").read().strip():
+            
+            if 'open' not in os.popen(f"{fwbin} open").read().strip():
                 return -1
 
             self.fwOK = True
-        if position not in os.popen(f"/opt/pesto/bin/fwandor {position} -nocheck").read().strip():
+        if position not in os.popen(f"{fwbin} {position} -nocheck").read().strip():
             return -1 
         return 0
 
     def getfwposition(self):
-        return os.popen("/opt/pesto/bin/fwandor -getposition -nocheck").read().strip()
+        fwbin = get_cfg("FWBIN",str)
+        return os.popen(f"{fwbin} -getposition -nocheck").read().strip()
     def relaunchfeed(self):
         if self.running:
             self.kill()

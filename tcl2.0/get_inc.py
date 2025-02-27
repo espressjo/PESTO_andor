@@ -1,6 +1,7 @@
 from os.path import join,getctime
 from os import walk
 
+
 def __find_between_r( s):
     if s and 'fits' in s:
         try:

@@ -1,13 +1,16 @@
 from pexpect import spawn,EOF
 import os
+from andorcfg import get_cfg
 
+TCLLIB = get_cfg("TCLLIB",str)
+TCLSH = get_cfg("TCLSH",str)
 class pytcl:
     def __init__(self,ip,port,alternateP=None):
         self.ip = ip
         self.alternate_port = alternateP
         self.port = port
-        self.python_path = "/opt/andor/python"
-        self.tclsh = "env LD_LIBRARY_PATH=/opt/tclsh8.5/lib /opt/tclsh8.5/bin/tclsh"
+        self.python_path = "/opt/andor.22.04/python"
+        self.tclsh = "env LD_LIBRARY_PATH=%s %s"%(TCLLIB,TCLSH)
         self.child = None
         self.child_alternate = None
     def connect(self):
